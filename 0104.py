@@ -52,45 +52,29 @@ class Classficator():
         self.df_total_sorted = df_total.sort_values(by=self.Index[0])
     
     # 獲取分類dataFrame-------------------------------------------------------------------
-    def get_0_30_df(self):
-        df_0_30 = self.df_total_sorted[self.df_total_sorted[self.Index[0]] <= 30].transpose()
-        df_0_30 = df_0_30.rename(columns={x:y for x,y in zip(df_0_30.columns, range(0, len(df_0_30.columns)))})
-        df_0_30.index.name = '0-30'
-        return df_0_30
-    
-    def get_31_50_df(self):
-        df_31_50 = self.df_total_sorted[31 <= self.df_total_sorted[self.Index[0]]]
-        df_31_50 = df_31_50[df_31_50[self.Index[0]] <= 50].transpose()
-        df_31_50 = df_31_50.rename(columns={x:y for x,y in zip(df_31_50.columns, range(0, len(df_31_50.columns)))})
-        df_31_50.index.name = '31-50'
-        return df_31_50
-    
-    def get_51_70_df(self):
-        df_51_70 = self.df_total_sorted[51 <= self.df_total_sorted[self.Index[0]]]
-        df_51_70 = df_51_70[df_51_70[self.Index[0]] <= 70].transpose()
-        df_51_70 = df_51_70.rename(columns={x:y for x,y in zip(df_51_70.columns, range(0, len(df_51_70.columns)))})
-        df_51_70.index.name = '51-70'
-        return df_51_70
-    
-    def get_71_90_df(self):
-        df_71_90 = self.df_total_sorted[71 <= self.df_total_sorted[self.Index[0]]]
-        df_71_90 = df_71_90[df_71_90[self.Index[0]] <= 90].transpose()
-        df_71_90 = df_71_90.rename(columns={x:y for x,y in zip(df_71_90.columns, range(0, len(df_71_90.columns)))})
-        df_71_90.index.name = '71-90'
-        return df_71_90
+    def get_i_to_i_plus_n_df(self, i, n):
+        df = self.df_total_sorted[i <= self.df_total_sorted[self.Index[0]]]
+        df = df[df[self.Index[0]] <= i+n-1].transpose()
+        df = df.rename(columns={x:y for x,y in zip(df.columns, range(1, len(df.columns)+1))})
+        df.index.name = f"{i}-{i+n-1}"
+        return df
     # ---------------------------------------------------------------------------------------
     
     # 寫檔功能
-    def write_excel(self):
+    def write_excel(self, StartSectionNum, StopSectionNum, n):
         global current_row
-        self.get_0_30_df().to_excel(writer, startrow=current_row)
-        current_row += (self.step+2)
-        self.get_31_50_df().to_excel(writer, startrow=current_row)
-        current_row += (self.step+2)
-        self.get_51_70_df().to_excel(writer, startrow=current_row)
-        current_row += (self.step+2)
-        self.get_71_90_df().to_excel(writer, startrow=current_row)
-        current_row += (self.step+2)
+        for i in range(StartSectionNum, StopSectionNum+1, n):
+            self.get_i_to_i_plus_n_df(i, n).to_excel(writer, startrow=current_row)
+            current_row += (self.step+2)
+
+        # self.get_0_30_df().to_excel(writer, startrow=current_row)
+        # current_row += (self.step+2)
+        # self.get_31_50_df().to_excel(writer, startrow=current_row)
+        # current_row += (self.step+2)
+        # self.get_51_70_df().to_excel(writer, startrow=current_row)
+        # current_row += (self.step+2)
+        # self.get_71_90_df().to_excel(writer, startrow=current_row)
+        # current_row += (self.step+2)
 
 
 # In[448]:
@@ -98,7 +82,7 @@ class Classficator():
 
 classficator1 = Classficator(Index1, 45, 2, 98)
 classficator1.read_excel(inputname, "同時間比較")
-classficator1.write_excel()
+classficator1.write_excel(1, 81, 10)
 
 
 # In[449]:
@@ -106,7 +90,7 @@ classficator1.write_excel()
 
 classficator2 = Classficator(Index2, 45, 104, 200)
 classficator2.read_excel(inputname, "同時間比較")
-classficator2.write_excel()
+classficator2.write_excel(1, 81, 10)
 
 
 # In[450]:
@@ -114,7 +98,7 @@ classficator2.write_excel()
 
 classficator3 = Classficator(Index3, 45, 206, 286)
 classficator3.read_excel(inputname, "同時間比較")
-classficator3.write_excel()
+classficator3.write_excel(1, 81, 10)
 
 
 # In[451]:
@@ -122,7 +106,7 @@ classficator3.write_excel()
 
 classficator4 = Classficator(Index4, 45, 291, 371)
 classficator4.read_excel(inputname, "同時間比較")
-classficator4.write_excel()
+classficator4.write_excel(1, 81, 10)
 
 
 # In[452]:
